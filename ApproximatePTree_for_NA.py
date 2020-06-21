@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jun 20 16:49:29 2020
-
-@author: John
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Created on Thu Feb 13 19:18:26 2020
 
 @author: Can KIZILKALE
