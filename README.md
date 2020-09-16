@@ -9,7 +9,7 @@ The reconstructed error free matrix is written in output_file
 Algchoice defines the version of the algorithm to be used.
 * = "FN" for matrices that only have false negatives
 * = "FPFN" for matrices that have both false positives and false negatives
-* = "NAFPFN" for matrices that have false positives , false negatives and NA (entries that could not be read) entries  that are marked as 3```
+* = "NAFPFN" for matrices that have false positives , false negatives and NA (entries that could not be read) entries  that are marked as 3
 
 S_or_Alpha 
 * = 0 uses standard version of the algorithms(Default), you should use this.
