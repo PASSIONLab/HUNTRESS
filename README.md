@@ -19,7 +19,7 @@ auto_tune = automatically adjusts hist_coeff to minimize 1-0 switches from the n
 * = 0 OFF (Default)
 * = 1 ON
 
-* overlap_coeff,hist_coeff = reconstruction parameters if one wants to adjust them. USe Autotune instead
+overlap_coeff,hist_coeff = reconstruction parameters if one wants to adjust them. USe Autotune instead
 
 EXAMPLE: ```Reconstruct("simNo_1-s_10-m_100-h_1-minVAF_0.03-ISAV_0-n_100-fp_0.0001-fn_0.1-na_0-d_0-l_1000000.SC", "myoutput", "NAFPFN",0,1)``` will reconstruct the given matrix for a matrix with NAs, uses auto tune(alpha mode off) and write it to file myoutput.sc
 
