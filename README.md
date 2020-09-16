@@ -7,17 +7,17 @@ The path and name of the the noisy matrix is given in input_file
 The reconstructed error free matrix is written in output_file
 
 Algchoice defines the version of the algorithm to be used.
-*           = "FN" for matrices that only have false negatives
-*           = "FPFN" for matrices that have both false positives and false negatives
-*           = "NAFPFN" for matrices that have false positives , false negatives and NA (entries that could not be read) entries  that are marked as 3```
+* = "FN" for matrices that only have false negatives
+* = "FPFN" for matrices that have both false positives and false negatives
+* = "NAFPFN" for matrices that have false positives , false negatives and NA (entries that could not be read) entries  that are marked as 3```
 
-* S_or_Alpha 
-*           = 0 uses standard version of the algorithms(Default), you should use this.
-*           = 1 uses an experimental version that seems to give improved results for extreme NA cases such as very fat matrices, highly non-uniform errors.
+S_or_Alpha 
+* = 0 uses standard version of the algorithms(Default), you should use this.
+* = 1 uses an experimental version that seems to give improved results for extreme NA cases such as very fat matrices, highly non-uniform errors.
             
-* auto_tune = automatically adjusts hist_coeff to minimize 1-0 switches from the noisy matrix to reconstructed one
-*           = 0 OFF (Default)
-*           = 1 ON
+auto_tune = automatically adjusts hist_coeff to minimize 1-0 switches from the noisy matrix to reconstructed one
+* = 0 OFF (Default)
+* = 1 ON
 
 * overlap_coeff,hist_coeff = reconstruction parameters if one wants to adjust them. USe Autotune instead
 
