@@ -7,23 +7,26 @@ Reconstruct(input_file,output_file,Algchoice,S_or_Alpha=0,auto_tune=0,overlapp_c
 The path and name of the the noisy matrix is given in input_file
 
 The reconstructed error free matrix is written in output_file. Output file name must end with ".CFMatrix" for proper operation
-Algchoice defines the version of the algorithm to be used.
-Algchoice 
-= "FN" for matrices that only have false negatives
-= "FPFN" for matrices that have both false positives and false negatives
-= "NAFPFN" for matrices that have false positives , false negatives and NA (entries that could not be read) entries  that are marked as 3
-approx_method defines which approximation will be used for number wise column ordering
-approx_method = 0 columns are ordered wrt. how many other columns they overlap
-              = 1 columns are ordered wrt. the number of ones they contain.
-            
- auto_tune = automatically adjusts hist_coeff to minimize 1-0 switches from the noisy matrix to reconstructed one
- auto_tune = 0 OFF 
-           = 1 ON  (Default)
- overlap_coeff,hist_coeff = reconstruction parameters if one wants to adjust them. USe Autotune instead
 
- postprocessing minimizes the total number of 1->0,0->1 while keeping the topology of the reconstructed graph. The files will have extension ".processed"
- postprocessing = 0 postprocessing OFF 
-                = 1 postprocessing ON  (default)    it still finds and writes the unprocessed matrix so keeping this always on is a good idea
+Algchoice defines the version of the algorithm to be used. Algchoice=
+- "FN" for matrices that only have false negatives
+- "FPFN" for matrices that have both false positives and false negatives
+- "NAFPFN" for matrices that have false positives , false negatives and NA (entries that could not be read) entries  that are marked as 3
+
+approx_method defines which approximation will be used for number wise column ordering
+approx_method = 
+- 0 columns are ordered wrt. how many other columns they overlap
+- 1 columns are ordered wrt. the number of ones they contain.
+            
+auto_tune automatically adjusts hist_coeff to minimize 1-0 switches from the noisy matrix to reconstructed one. auto_tune = 
+- 0 OFF 
+- 1 ON  (Default)
+
+overlap_coeff,hist_coeff arfe reconstruction parameters if one wants to adjust them. Use Autotune instead
+
+postprocessing minimizes the total number of 1->0,0->1 while keeping the topology of the reconstructed graph. The files will have extension ".processed". postprocessing = 
+- 0 postprocessing OFF 
+- 1 postprocessing ON  (default)    it still finds and writes the unprocessed matrix so keeping this always on is a good idea
                 
  EXAMPLE: 
  ```
