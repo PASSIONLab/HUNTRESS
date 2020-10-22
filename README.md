@@ -18,7 +18,7 @@ HeuristicR_3_latest.py
 #           = 1 ON  (Default)
 # overlap_coeff,hist_coeff = reconstruction parameters if one wants to adjust them. USe Autotune instead
 #
-# postprocessing minimizes the total number of 1->0,0->1while keeping the topology of the reconstructed graph. The files will have extension ".processed"
+# postprocessing minimizes the total number of 1->0,0->1 while keeping the topology of the reconstructed graph. The files will have extension ".processed"
 # postprocessing = 0 postprocessing OFF 
 #                = 1 postprocessing ON  (default)    it still finds and writes the unprocessed matrix so keeping this always on is a good idea
 # EXAMPLE: Reconstruct("simNo_1-s_10-m_100-h_1-minVAF_0.03-ISAV_0-n_100-fp_0.0001-fn_0.1-na_0-d_0-l_1000000.SC", "myoutput.CFMatrix", "NAFPFN",approx_method=0,auto_tune=1,postprocessing=1) will reconstruct the given matrix for a matrix with NAs,using approximation wrt overlaps, output to myoutput.CFMATrix
