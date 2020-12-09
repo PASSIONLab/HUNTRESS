@@ -15,8 +15,8 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from argparse import ArgumentParser
-import pygraphviz as pyg
-os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
+#import pygraphviz as pyg
+#os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 # Both algorithms take inut matrices of BOOL type.
 def greedyPtreeNew(M_input): #very greedy algorithm that constructs a ptree matrix from M_inputs by adding 1's
@@ -31,7 +31,7 @@ def greedyPtreeNew(M_input): #very greedy algorithm that constructs a ptree matr
     for i in range(M_copy.shape[1]):
         ISet.append(ISet1[i])
     
-    bret=[]    #Location of detected false negatives
+    bret=[]    #Location of detected false negatives (not necessary)
         
     while len(ISet)>1:
         #print("pivoting column", i,bret)
@@ -152,13 +152,19 @@ def isPtree(matrix_in):   # brute force check if matrix_in is a pTree
 
 
 
-#matrix_input=ReadFfile('simNo_44-s_70-m_500-h_1-minVAF_0.01-ISAV_0-n_1000-fp_0.005-fn_0.20-na_0-d_0-l_1000.SC')
+#matrix_input=ReadFfile('simNo_1-s_10-m_100-n_100-fn_0.1-k_144.SC.noisy')
 #
 #start=time.time()
 #val=greedyPtreeFPnew(matrix_input)
 #end=time.time()
 #print(end-start)
-#matrix_out=val[2]
+
+#start=time.time()
+#val=greedyPtreeNew(matrix_input)
+#end=time.time()
+#print(end-start)
+#matrix_out=val[1]
+#print(matrix_out)
 ##matrix_oldout=ReadFfile("simNo_1-s_15-m_1000-h_1-minVAF_0.04-ISAV_0-n_100-fp_0.005-fn_0.20-na_0-d_0-l_1000000.SCFpApprox")
 ##matrix_out=correctitFp(matrix_input,val)
 ##print(sum(matrix_input)-sum(matrix_out))
