@@ -51,25 +51,32 @@ def Reconstruct(input_file,output_file,Algchoice="FPNA",auto_tune=1,overlapp_coe
     matrix_NA_est=Estimated_Matrix(input_file)
     print(np.sum(matrix_input),np.sum(matrix_NA_est),file=Flog)
 
-    tune_range=100   
-            
+    tune_range=30   
+    
+    running_time = 0
     if Algchoice == "FN":
-
+        s_time = time.time()
         matrix_recons=greedyPtreeNew(matrix_input.astype(bool))[1]
+        e_time = time.time()
+        running_time = e_time - s_time
         WriteTfile(output_file,matrix_recons,input_file)
  
     if Algchoice == "FPNA" and auto_tune==0:
 
+        s_time = time.time()
         apprx_ordr=sum(matrix_NA_est)
         matrix_recons=greedyPtreeNA(matrix_input.astype(bool),apprx_ordr,overlapp_coeff,hist_coeff)[2]
+        e_time = time.time()
+        running_time = e_time - s_time
         output_file=output_file+"_optH_{}TEMP.CFMatrix".format(hist_coeff)
         WriteTfile(output_file,matrix_recons,input_file)
 #        print(" difference ",np.sum(matrix_recons!=matrix_input))
     
     if Algchoice == "FPNA" and auto_tune==1:
 
+        s_time = time.time()
         apprx_ordr=sum(matrix_NA_est)
-        h_current=2
+        h_current=1
         print("auto tuning coeffcicient for minimum 1-0 switches for FP and/or NA",file=Flog)    
         matrix_recons=greedyPtreeNA(matrix_input.astype(bool),apprx_ordr,0,1)[2]
         matrix_rec_Temp=deleteNas(matrix_input_raw,matrix_recons)
@@ -78,22 +85,29 @@ def Reconstruct(input_file,output_file,Algchoice="FPNA",auto_tune=1,overlapp_coe
         
 #        distance=np.square(n_10)+n_01
         distance=fnfp*n_10+fnc*n_01
-        for i in range(h_current + 1,tune_range):
+        oc_current=0
+        for oc_j in range(0,6):
+            overlapp_coeff=oc_j/10
             
-            matrix_rec_i=greedyPtreeNA(matrix_input.astype(bool),apprx_ordr,overlapp_coeff,i)[2]
-            matrix_rec_Temp=deleteNas(matrix_input_raw,matrix_rec_i)
-            n_10=np.sum(matrix_rec_Temp<matrix_input,dtype='int64')
-            n_01=np.sum(matrix_rec_Temp>matrix_input,dtype='int64')
-            print("Opt h =",h_current,"H coefficient = ",i," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance,file=Flog)
-            print("Opt h =",h_current,"H coefficient = ",i," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance)
-#            distance_i=np.square(n_10)+n_01
-            distance_i=fnfp*n_10+fnc*n_01
-#            if n_10<np.sum(matrix_recons<matrix_input):
-            if distance_i<distance:
-                matrix_recons=matrix_rec_i.copy()
-                distance=distance_i
-#                WriteTfile(output_file,matrix_recons,input_file)
-                h_current=i
+            for i in range(h_current + 1,tune_range):
+                
+                matrix_rec_i=greedyPtreeNA(matrix_input.astype(bool),apprx_ordr,overlapp_coeff,i)[2]
+                matrix_rec_Temp=deleteNas(matrix_input_raw,matrix_rec_i)
+                n_10=np.sum(matrix_rec_Temp<matrix_input,dtype='int64')
+                n_01=np.sum(matrix_rec_Temp>matrix_input,dtype='int64')
+                print("Opt h = ",h_current,"Opt_O = ",oc_current,"H,OC coefficient = ",i,overlapp_coeff," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance,file=Flog)
+                print("Opt h = ",h_current,"Opt_O = ",oc_current,"H,OC coefficient = ",i,overlapp_coeff," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance)
+    #            distance_i=np.square(n_10)+n_01
+                distance_i=fnfp*n_10+fnc*n_01
+    #            if n_10<np.sum(matrix_recons<matrix_input):
+                if distance_i<distance:
+                    matrix_recons=matrix_rec_i.copy()
+                    distance=distance_i
+    #                WriteTfile(output_file,matrix_recons,input_file)
+                    h_current=i
+                    oc_current=overlapp_coeff
+        e_time = time.time()
+        running_time = e_time - s_time
 
         output_file=output_file+"_optH_TEMP.CFMatrix"    
         WriteTfile(output_file,matrix_recons,input_file)
@@ -104,7 +118,7 @@ def Reconstruct(input_file,output_file,Algchoice="FPNA",auto_tune=1,overlapp_coe
     if postprocessing==1:
         postprocess(input_file,output_file[:-13]+".CFMatrix")   #Column based post processing, seem to give the best result.
         
-        
+    return running_time
         
     
 def deleteNas(M_in,M_out):
@@ -418,7 +432,9 @@ def compute_fnfp(M_n,M_r):
 # Cenk's group code for printing a phylogeny graph from a Matrix.
 #----------------------------------------------------------------    
 def draw_tree(filename):
-    add_cells = True
+    add_cells = False
+    change_edges_to_number = False
+    combine = False
 
     from collections import Counter
     import pygraphviz as pyg
@@ -483,12 +499,15 @@ def draw_tree(filename):
     clusters = {}
     for node in G:
         if node == cols:
-            # G._node[node]['label'] = '<<b>germ<br/>cells</b>>'
+            if not add_cells:
+                G._node[node]["label"] = "<<b>zygote</b>>"
             G._node[node]["fontname"] = "Helvetica"
-            G._node[node]["width"] = 0.4
-            G._node[node]["style"] = "filled"
-            G._node[node]["penwidth"] = 3
-            G._node[node]["fillcolor"] = "gray60"
+            G._node[node]["style"] = "rounded"
+            G._node[node]["shape"] = "box"
+            G._node[node]["margin"] = 0.05
+            G._node[node]["pad"] = 0
+            G._node[node]["width"] = 0
+            G._node[node]["height"] = 0
             continue
         untilnow_mut = []
         sp = nx.shortest_path(G, cols, node)
@@ -505,65 +524,97 @@ def draw_tree(filename):
 
         if add_cells:
             if "––" not in clusters[node]:
-                G._node[node]["fillcolor"] = "#80C4DF"
+                G._node[node]["color"] = "#0000FF"
             else:
-                G._node[node]["fillcolor"] = "gray90"
+                G._node[node]["color"] = "gray70"
+                G._node[node]["fontcolor"] = "gray70"
             G._node[node]["label"] = clusters[node]
         else:
             G._node[node]["label"] = ""
-            G._node[node]["shape"] = "circle"
+        G._node[node]["shape"] = "box"
         G._node[node]["fontname"] = "Helvetica"
-        G._node[node]["width"] = 0.4
-        G._node[node]["style"] = "filled"
-        G._node[node]["penwidth"] = 2.5
+        G._node[node]["style"] = "rounded"
+        G._node[node]["margin"] = 0.05
+        G._node[node]["pad"] = 0
+        G._node[node]["width"] = 0
+        G._node[node]["height"] = 0
+
     i = 1
     for k, v in clusters.items():
         if v == "––":
             clusters[k] = i * "––"
             i += 1
 
-    for node in G:
-        if node != cols:
-            num = 0
-            paths = nx.shortest_path(G, source=cols, target=node)
-            for i in range(len(paths) - 1):
-                x = paths[i]
-                y = paths[i + 1]
-                num += len(G[x][y]["label"].split(splitter_mut))
-            G._node[node]["label"] = f"<[{node}]  " + G._node[node]["label"] + f"  ({num})>"
-        else:
-            G._node[node]["label"] = f"<[{node}]  germ cells>"
-
-    data = G.edges.data("label")
     outputpath = filename[: -len(".CFMatrix")]
-    for u, v, l in data:
-        ll = l.split(splitter_mut)
-        genes = [x.split(".")[0] for x in ll]
-        a = Counter(genes)
-        a = a.most_common()
-        lll = list(set([x.split(".")[0] for x in ll]))
-        G.add_edge(u, v, label=splitter_mut.join(lll))
-        print(f"[{u}]->[{v}]: {' '.join(ll)}", file=open(f"{outputpath}.mutsAtEdges", "a"))
-        G.add_edge(u, v, label=f" {len(ll)}")
+    if add_cells:
+        for node in G:
+            if node != cols:
+                num = 0
+                paths = nx.shortest_path(G, source=cols, target=node)
+                for i in range(len(paths) - 1):
+                    x = paths[i]
+                    y = paths[i + 1]
+                    num += len(G[x][y]["label"].split(splitter_mut))
+                G._node[node]["label"] = f"<[{node}]  " + G._node[node]["label"] + f"  ({num})>"
+            else:
+                G._node[node]["label"] = f"<[{node}]  <b>zygote</b>  (0)>"
 
-    header = ""
-    temp = df.columns[(df == 0).all(axis=0)]
-    if len(temp) > 0:
-        header += f"Became Germline: {len(temp)}<br/>"
+    if change_edges_to_number:
+        data = G.edges.data("label")
+        # with open(f"{outputpath}.mutsAtEdges", "w") as fout:
+        for u, v, l in data:
+            ll = l.split(splitter_mut)
+            # fout.write(f"[{u}]->[{v}]: {' '.join(ll)}\n")
+            if "––" in G._node[v]["label"]:
+                G.add_edge(u, v, label=f"  {len(ll)}  ", color="gray70", fontcolor="gray70")
+            else:
+                G.add_edge(u, v, label=f"  {len(ll)}  ")
 
-    H = nx.relabel_nodes(G, clusters)
-    html = """<{}>""".format(header)
-    H.graph["graph"] = {
-        "label": html,
-        "labelloc": "t",
-        "resolution": 300,
-        "fontname": "Helvetica",
-        "fontsize": 8,
-    }
-    H.graph["node"] = {"fontname": "Helvetica", "fontsize": 12}
-    H.graph["edge"] = {"fontname": "Helvetica", "fontsize": 12, "penwidth": 2}
 
-    mygraph = to_agraph(G)
+    if combine:
+        H = G.copy()
+
+        for _ in range(len(G.nodes)):
+            d_in = H.in_degree(H)
+            d_out = H.out_degree(H)
+            for node in H.nodes():
+                if d_out[node] == 1 and d_in[node] == 1:
+                    parent = [x for x in H.predecessors(node)][0]
+                    child = [x for x in H.successors(node)][0]
+                    if d_out[parent] < 2 and d_in[parent] == 1:
+                        new_node = f'{parent}{node}'
+                        new_edge = f"{int(H[parent][node]['label']) + int(H[node][child]['label'])}"
+
+                        H = nx.contracted_nodes(H, parent, node, self_loops=False)
+                        mapping = {parent: new_node}
+                        H = nx.relabel_nodes(H, mapping)
+                        H[new_node][child]['label'] = new_edge
+                        break
+
+        d_in = H.in_degree(H)
+        d_out = H.out_degree(H)
+        nodes = []
+        for node in H.nodes():
+            if d_out[node] == 0:
+                nodes.append(node)
+
+        for node in nodes:
+            parent = [x for x in H.predecessors(node)][0]
+            if d_out[parent] == 1 and d_in[parent] == 1:
+                grandparent = [x for x in H.predecessors(parent)][0]
+
+                new_node = f'{parent}{node}'
+                new_edge = f"{int(H[grandparent][parent]['label']) + int(H[parent][node]['label'])}"
+
+                H = nx.contracted_nodes(H, parent, node, self_loops=False)
+                mapping = {parent: new_node}
+                H = nx.relabel_nodes(H, mapping)
+                H[grandparent][new_node]['label'] = new_edge
+
+        mygraph = nx.drawing.nx_agraph.to_agraph(H)
+    else:
+        mygraph = nx.drawing.nx_agraph.to_agraph(G)
+
     mygraph.layout(prog="dot")
     mygraph.draw(f"{outputpath}.png")
 
@@ -652,8 +703,8 @@ def find_dist_col(node_piv,M_samples):
     for i in range(M_nodes.shape[1]):
         d_10=np.sum(node_piv>M_nodes[:,i],dtype='int64')
         d_01=np.sum(node_piv<M_nodes[:,i],dtype='int64')
-        distances[i]=np.square(d_10) + d_01
-
+#        distances[i]=np.square(d_10) + d_01
+        distances[i]=d_10 + d_01
     return distances
 
 def closest_matrix(M_input,M_nodes,M_rec):
