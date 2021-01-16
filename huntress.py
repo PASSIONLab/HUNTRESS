@@ -15,8 +15,12 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 from datetime import datetime
+import argparse
 from argparse import ArgumentParser
 import pygraphviz as pyg
+import itertools
+from multiprocessing import Process, Queue
+import multiprocessing as mp
 
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 np.set_printoptions(threshold=np.inf)
@@ -44,16 +48,22 @@ np.set_printoptions(threshold=np.inf)
 #------------------- END README ---------------------------------------
 
 
-def Reconstruct(input_file,output_file,Algchoice="FPNA",auto_tune=1,overlapp_coeff=0.1,hist_coeff=20,postprocessing=0,fnfp=1,fnc=1):
+def Reconstruct(input_file,output_file,Algchoice="FPNA",auto_tune=1,overlapp_coeff=0.3,hist_coeff=20,postprocessing=0,fnfp=1,fnc=1,n_proc=7):
+    q=Queue()
     Flog = open(output_file + ".LOG", "a+")
     matrix_input=ReadFileNA(input_file)
     matrix_input_raw=ReadFasis(input_file)
     matrix_NA_est=Estimated_Matrix(input_file)
     print(np.sum(matrix_input),np.sum(matrix_NA_est),file=Flog)
-
+    h_range=[x for x in range(1,90,2)]
+    oc_range=[x/10 for x in range(1,5)]
+    tune_var=[x for x in itertools.product(h_range,oc_range)]
+    
     tune_range=30   
     
     running_time = 0
+      
+    
     if Algchoice == "FN":
         s_time = time.time()
         matrix_recons=greedyPtreeNew(matrix_input.astype(bool))[1]
@@ -73,45 +83,96 @@ def Reconstruct(input_file,output_file,Algchoice="FPNA",auto_tune=1,overlapp_coe
 #        print(" difference ",np.sum(matrix_recons!=matrix_input))
     
     if Algchoice == "FPNA" and auto_tune==1:
-
-        s_time = time.time()
-        apprx_ordr=sum(matrix_NA_est)
-        h_current=1
-        print("auto tuning coeffcicient for minimum 1-0 switches for FP and/or NA",file=Flog)    
-        matrix_recons=greedyPtreeNA(matrix_input.astype(bool),apprx_ordr,0,1)[2]
-        matrix_rec_Temp=deleteNas(matrix_input_raw,matrix_recons)
-        n_10=np.sum(matrix_rec_Temp<matrix_input)
-        n_01=np.sum(matrix_rec_Temp>matrix_input)
+        proc_size=np.ceil(len(tune_var)/n_proc).astype(int)
+        print(proc_size)
+        cpu_range=[]
+#        q=Queue()
         
-#        distance=np.square(n_10)+n_01
-        distance=fnfp*n_10+fnc*n_01
-        oc_current=0
-        for oc_j in range(0,6):
-            overlapp_coeff=oc_j/10
-            
-            for i in range(h_current + 1,tune_range):
-                
-                matrix_rec_i=greedyPtreeNA(matrix_input.astype(bool),apprx_ordr,overlapp_coeff,i)[2]
-                matrix_rec_Temp=deleteNas(matrix_input_raw,matrix_rec_i)
-                n_10=np.sum(matrix_rec_Temp<matrix_input,dtype='int64')
-                n_01=np.sum(matrix_rec_Temp>matrix_input,dtype='int64')
-                print("Opt h = ",h_current,"Opt_O = ",oc_current,"H,OC coefficient = ",i,overlapp_coeff," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance,file=Flog)
-                print("Opt h = ",h_current,"Opt_O = ",oc_current,"H,OC coefficient = ",i,overlapp_coeff," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance)
-    #            distance_i=np.square(n_10)+n_01
-                distance_i=fnfp*n_10+fnc*n_01
-    #            if n_10<np.sum(matrix_recons<matrix_input):
-                if distance_i<distance:
-                    matrix_recons=matrix_rec_i.copy()
-                    distance=distance_i
-    #                WriteTfile(output_file,matrix_recons,input_file)
-                    h_current=i
-                    oc_current=overlapp_coeff
+        for i in range(n_proc):
+            s_i=i*proc_size
+            e_i=s_i+proc_size
+            if e_i>len(tune_var):
+                e_i=len(tune_var)
+            cpu_range.append(tune_var[s_i:e_i])
+        s_time = time.time()
+        p=[Process(target=Auto_fnfp, args=(q,cpu_range[i],matrix_input,matrix_NA_est,matrix_input_raw,fnfp,fnc,i,input_file,output_file)) for i in range(len(cpu_range))]
+        for i in p:
+            i.start()
+        for i in p:
+            i.join()
+        ret = []
+        while not q.empty():
+            print(" Reading the queue ...")
+            ret.append(q.get())
+        
+        [m_r,d_min]=ret[0]
+        matrix_recons=ReadFfile(m_r)
+        for i in range(1,len(ret)):
+            [m,d]=ret[i]
+            print(d_min)
+            if d<d_min:
+                matrix_recons=ReadFfile(m)
+                print(d_min)
+                d_min=d
+        
+        print("closed",q.empty())
+        
+        
+        
+##        [matrix_recons,d_min]=Auto_fnfp(cpu_range[0])
+#        for i in range(1,len(cpu_range)):
+##            print(len(t))
+##            print(t)
+#            [m,d]=Auto_fnfp(cpu_range[i])
+#            print(d_min)
+#            
+#            if d<d_min:
+#                matrix_recons=m.copy()
+#                print(d_min)
+#                d_min=d
+        
+#        matrix_recons=Auto_fnfp(tune_var)[0]
+#        apprx_ordr=sum(matrix_NA_est)
+#        h_current=1
+#        print("auto tuning coeffcicient for minimum 1-0 switches for FP and/or NA",file=Flog)    
+#        matrix_recons=greedyPtreeNA(matrix_input.astype(bool),apprx_ordr,0,1)[2]
+#        matrix_rec_Temp=deleteNas(matrix_input_raw,matrix_recons)
+#        n_10=np.sum(matrix_rec_Temp<matrix_input)
+#        n_01=np.sum(matrix_rec_Temp>matrix_input)
+#        
+##        distance=np.square(n_10)+n_01
+#        distance=fnfp*n_10+fnc*n_01
+#        oc_current=0
+#        
+#        
+#            
+#        
+#        for oc_j in range(0,6):
+#            overlapp_coeff=oc_j/10
+#            
+#            for i in range(h_current + 1,tune_range):
+#                
+#                matrix_rec_i=greedyPtreeNA(matrix_input.astype(bool),apprx_ordr,overlapp_coeff,i)[2]
+#                matrix_rec_Temp=deleteNas(matrix_input_raw,matrix_rec_i)
+#                n_10=np.sum(matrix_rec_Temp<matrix_input,dtype='int64')
+#                n_01=np.sum(matrix_rec_Temp>matrix_input,dtype='int64')
+#                print("Opt h = ",h_current,"Opt_O = ",oc_current,"H,OC coefficient = ",i,overlapp_coeff," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance,file=Flog)
+#                print("Opt h = ",h_current,"Opt_O = ",oc_current,"H,OC coefficient = ",i,overlapp_coeff," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance)
+#    #            distance_i=np.square(n_10)+n_01
+#                distance_i=fnfp*n_10+fnc*n_01
+#    #            if n_10<np.sum(matrix_recons<matrix_input):
+#                if distance_i<distance:
+#                    matrix_recons=matrix_rec_i.copy()
+#                    distance=distance_i
+#    #                WriteTfile(output_file,matrix_recons,input_file)
+#                    h_current=i
+#                    oc_current=overlapp_coeff
         e_time = time.time()
         running_time = e_time - s_time
 
         output_file=output_file+"_optH_TEMP.CFMatrix"    
         WriteTfile(output_file,matrix_recons,input_file)
-        print(" difference ",np.sum(matrix_recons!=matrix_input)," at h=",h_current,file=Flog)
+#        print(" difference ",np.sum(matrix_recons!=matrix_input)," at h=",h_current,file=Flog)
     
     Flog.close()
     postprocess_col(input_file,output_file)   #Column based post processing, seem to give the best result.
@@ -119,7 +180,40 @@ def Reconstruct(input_file,output_file,Algchoice="FPNA",auto_tune=1,overlapp_coe
         postprocess(input_file,output_file[:-13]+".CFMatrix")   #Column based post processing, seem to give the best result.
         
     return running_time
+
+def Auto_fnfp(q,tune_ran,m_input,m_NA_est,m_input_raw,fnfp,fnc,procid,in_file,out_file):  # multiprocessing worker unit, takes a tuning range and tries everything in between
+    apprx_ordr=sum(m_NA_est)
         
+    print("An instance of auto tune has started...", procid)    
+    matrix_recon=greedyPtreeNA(m_input.astype(bool),apprx_ordr,tune_ran[0][1],tune_ran[0][0])[2]
+    matrix_rec_Temp=deleteNas(m_input_raw,matrix_recon)
+    n_10=np.sum(matrix_rec_Temp<m_input)
+    n_01=np.sum(matrix_rec_Temp>m_input)
+        
+#        distance=np.square(n_10)+n_01
+    distance=fnfp*n_10+fnc*n_01
+        
+    h_current=tune_ran[0][0]
+    oc_current=tune_ran[0][1]
+    for [h_i,overlapp_coeff] in tune_ran:
+        matrix_rec_i=greedyPtreeNA(m_input.astype(bool),apprx_ordr,overlapp_coeff,h_i)[2]
+        matrix_rec_Temp=deleteNas(m_input_raw,matrix_rec_i)
+        n_10=np.sum(matrix_rec_Temp<m_input,dtype='int64')
+        n_01=np.sum(matrix_rec_Temp>m_input,dtype='int64')
+#        print("Opt h = ",h_current,"Opt_O = ",oc_current,"H,OC coefficient = ",h_i,overlapp_coeff," 01 switches : ",n_01,"10 switches = ", n_10 , "best :",distance)
+#           distance_i=np.square(n_10)+n_01
+        distance_i=fnfp*n_10+fnc*n_01
+#            if n_10<np.sum(matrix_recons<matrix_input):
+        if distance_i<distance:
+            matrix_recon=matrix_rec_i.copy()
+            distance=distance_i
+#                WriteTfile(output_file,matrix_recons,input_file)
+            h_current=h_i
+            oc_current=overlapp_coeff
+    print(procid,"th process finished",q.full())
+    output_file=out_file+"_TEMP_{}.CFMatrix".format(procid)    
+    WriteTfile(output_file,matrix_recon,in_file)
+    q.put([output_file,distance])        
     
 def deleteNas(M_in,M_out):
     M_o=M_out.copy()
@@ -761,4 +855,17 @@ def postprocess_col(input_file,out_file):
     WriteTfile(processed_file,M_postprocessed,input_file)
 
     draw_tree(processed_file)
+    
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("inputfile")
+    parser.add_argument("outputfile")
+    parser.add_argument("nofcpus", type=int)
+    args= parser.parse_args()
+
+    print(args.inputfile)
+#     q = Queue()
+    Reconstruct(args.inputfile,args.outputfile,n_proc=args.nofcpus)
+#    Reconstruct("Yardena.SC","Yardena_Parallel.SC")
     
