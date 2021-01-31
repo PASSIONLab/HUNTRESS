@@ -416,6 +416,8 @@ def ReadFfile(filename):
     reads a matrix from file and returns it in BOOL type
     """
     df = pd.read_csv(filename, sep="\t", index_col=0)
+    df = df.replace("?", 3)
+    df = df.astype(int)
     M = df.values.astype(bool)
     return M
 
@@ -425,6 +427,8 @@ def ReadFile(filename):
     reads a matrix from file and returns it in BOOL type
     """
     df = pd.read_csv(filename, sep="\t", index_col=0)
+    df = df.replace("?", 3)
+    df = df.astype(int)
     M = df.values
     return M
 
@@ -434,6 +438,8 @@ def ReadFileNA(filename):
     reads the file and fills the NA with 0's.
     """
     df = pd.read_csv(filename, sep="\t", index_col=0)
+    df = df.replace("?", 3)
+    df = df.astype(int)
     M = df.values
 
     NA_position = np.argwhere(M == 3)
@@ -450,6 +456,8 @@ def Estimated_Matrix(
     Creates an estimate of the matrix such that each element is given the expectation wrt the column 1/0 frequencies.
     """
     df = pd.read_csv(filename, sep="\t", index_col=0)
+    df = df.replace("?", 3)
+    df = df.astype(int)
     M = df.values.astype(float)
 
     for i in range(M.shape[1]):
@@ -469,6 +477,8 @@ def WriteTfile(filename, matrix, filename2):
     writes matrix output as an integer matrix
     """
     df_input = pd.read_csv(filename2, sep="\t", index_col=0)
+    df_input = df_input.replace("?", 3)
+    df_input = df_input.astype(int)
     matrix_output = matrix.astype(int)
     df_output = pd.DataFrame(matrix_output)
     df_output.columns = df_input.columns
@@ -558,6 +568,8 @@ def ReadFasis(filename):
     reads a matrix from file and returns it in BOOL type
     """
     df = pd.read_csv(filename, sep="\t", index_col=0)
+    df = df.replace("?", 3)
+    df = df.astype(int)
     M = df.values
     return M
 
