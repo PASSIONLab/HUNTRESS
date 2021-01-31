@@ -20,7 +20,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 # =========================================================================================
-# Written by : Can Kizilkale (esadeqia@iu.edu)
+# Written by : Can Kizilkale (CanKizilkale@lbl.gov)
 #              and Farid Rashidi Mehrabadi (frashidi@iu.edu)
 # Last Update: Jan 28, 2021
 # =========================================================================================
