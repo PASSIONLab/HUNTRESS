@@ -1,41 +1,113 @@
-#Needs to be updated
+# HUNTRESS
 
-HeuristicR_3_latest.py
+HUNTRESS is a fast heuristic for reconstructing phylogenetic trees of tumor evolution.
 
-Use Reconstruct as the main function.
+
+## Contents
+  1. [Installation](#installation)
+  2. [Running](#running)
+     * [Input](#input)
+     * [Output](#output)
+     * [Parameters](#parameters)
+  3. [Example](#example)
+  4. [Contact](#contact)
+
+<a name="installation"></a>
+## Installation
+HUNTRESS is written in Python. It supports Python 3. Currently it is intended to be run on POSIX-based systems (only Linux and macOS have been tested).  
+
+```console
+~$ git clone git@github.com:PASSIONLab/HUNTRESS.git
+~$ cd HUNTRESS
+~$ pip install -r requirements.txt
+~$ python huntress.py --help
 ```
-Reconstruct(input_file,output_file,Algchoice,S_or_Alpha=0,auto_tune=0,overlapp_coeff=0,hist_coeff=80):
+
+<a name="running"></a>
+## Running
+
+<a name="input"></a>
+### Input
+
+Single-cell input is assumed to be represented in the form of ternary, __tab-delimited__, matrix with rows corresponding to single-cells and columns corresponding to mutations. We assume that this file contains headers and that matrix is ternary matrix with 0 denoting the absence and 1 denoting the presence of mutation in a given cell, whereas ? represents the lack of information about presence/absence of mutation in a given cell (i.e. missing entry). __In order to simplify parsing of the matrix, we also assume that upper left corner equals to string `cellID/mutID`__.
+
+Below is an example of single-cell data matrix. Note that mutation and cell names are arbitrary strings not containing tabs or spaces, however they must be unique.
 ```
-The path and name of the the noisy matrix is given in input_file
+cellID/mutID  mut0  mut1  mut2  mut3  mut4  mut5  mut6  mut7
+cell0         0     0     ?     0     0     0     0     0
+cell1         0     ?     1     0     0     0     1     1
+cell2         0     0     1     0     0     0     1     1
+cell3         1     1     0     0     0     0     0     0
+cell4         0     0     1     0     0     0     0     0
+cell5         1     0     0     0     0     0     0     0
+cell6         0     0     1     0     0     0     1     1
+cell7         0     0     1     0     0     0     0     0
+cell8         ?     0     0     0     ?     0     ?     1
+cell9         0     1     0     0     0     0     0     0
+```
 
-The reconstructed error free matrix is written in output_file. Output file name must end with ".CFMatrix" for proper operation
+<a name="output"></a>
+### Output
+The program will generate a file in **OUT_DIR** folder (which is set by argument -o or --outDir). This folder will be created automatically if it does not exist.
 
-Algchoice defines the version of the algorithm to be used. Algchoice=
-- "FN" for matrices that only have false negatives
-- "FPFN" for matrices that have both false positives and false negatives
-- "NAFPFN" for matrices that have false positives , false negatives and NA (entries that could not be read) entries  that are marked as 3
+The output matrix is also a tab-delimited file having the same format as the input matrix, except that eliminated mutations (columns) are excluded (so, in case when mutation elimination is allowed, this matrix typically contains less columns than the input matrix). Output matrix represents genotypes-corrected matrix (where false positives and false negatives from the input are corrected and each of the missing entries set to 0 or 1). Suppose the input file is **INPUT_MATRIX.ext**, the output matrix will be stored in file **OUT_DIR/INPUT_MATRIX.CFMatrix**. For example:
+```
+ input file: data/ALL2.SC
+output file: OUT_DIR/ALL2.CFMatrix
+```
 
-approx_method defines which approximation will be used for number wise column ordering
-approx_method = 
-- 0 columns are ordered wrt. how many other columns they overlap
-- 1 columns are ordered wrt. the number of ones they contain.
-            
-auto_tune automatically adjusts hist_coeff to minimize 1-0 switches from the noisy matrix to reconstructed one. auto_tune = 
-- 0 OFF 
-- 1 ON  (Default)
+<a name="parameters"></a>
+### Parameters
+| Parameter  | Description                              | Default  | Mandatory      |
+|------------|------------------------------------------|----------|----------------|
+| -i         | Path to single-cell data matrix file     | -        | :radio_button: |
+| -o         | Output directory                         | current  | :white_circle: |
+| -b         | Bounding algorithm                       | 1        | :white_circle: |
+| -t         | Draw output tree with Graphviz           | -        | :white_circle: |
 
-overlap_coeff,hist_coeff arfe reconstruction parameters if one wants to adjust them. Use Autotune instead
+<a name="example"></a>
+## Example
 
-postprocessing minimizes the total number of 1->0,0->1 while keeping the topology of the reconstructed graph. The files will have extension ".processed". postprocessing = 
-- 0 postprocessing OFF 
-- 1 postprocessing ON  (default)    it still finds and writes the unprocessed matrix so keeping this always on is a good idea
-                
- EXAMPLE: 
- ```
- Reconstruct("simNo_1-s_10-m_100-h_1-minVAF_0.03-ISAV_0-n_100-fp_0.0001-fn_0.1-na_0-d_0-l_1000000.SC", "myoutput.CFMatrix", "NAFPFN",approx_method=0,auto_tune=1,postprocessing=1) 
- ```
- will reconstruct the given matrix for a matrix with NAs,using approximation wrt overlaps, output to myoutput.CFMATrix
- and write the postprocessed version to "myoutput.processed.CFMatrix"
+```console
+~$ python main.py -i example/data1.SC -o example -b 2 -t
 
+[02/04 12:53:49] Size: (20, 20)
+[02/04 12:53:49] NAValue: 3
+[02/04 12:53:49] #Zeros: 226
+[02/04 12:53:49] #Ones: 94
+[02/04 12:53:49] #NAs: 80
+[02/04 12:53:49] Time: 00:00:00
+[02/04 12:53:49] #0->1: 10
+[02/04 12:53:49] #1->0: 0
+[02/04 12:53:49] #na->0: 60
+[02/04 12:53:49] #na->1: 20
+[02/04 12:53:49] isDone: True
+[02/04 12:53:49] The output phylogenetic tree is in 'example' directory!
+```
 
+This is the clonal tree that has been created:
+<p align="center">
+  <img src="example/data1.png" height="400">
+</p>
 
+For each node, the number inside the brackets denotes its node id and the number inside the parentheses shows the total number of mutations occurring on the path from the germline (root) to the node (i.e., the total number of mutations harbored by the node). The edge labels represent the number of mutations occurring between a parent and its child node. The complete list of mutations occurring at each edge can be found `data1.mutsAtEdges` file which contains:
+
+```
+[12]->[11]: mut7 mut8 mut9 mut10 mut11
+[12]->[10]: mut0 mut2
+[11]->[9]: mut15 mut16 mut17
+[10]->[8]: mut1
+[9]->[5]: mut18
+[8]->[7]: mut3
+[8]->[1]: mut12 mut14
+[7]->[6]: mut5
+[6]->[4]: mut4
+[5]->[2]: mut19
+[4]->[3]: mut6
+[1]->[0]: mut13
+
+```
+
+<a name="contact"></a>
+## Contact
+If you have any questions please e-mail us at CanKizilkale@lbl.gov or frashidi@iu.edu.
