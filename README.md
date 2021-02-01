@@ -25,7 +25,7 @@ cell6         0     0     1     0     0     0     1     1
 cell7         0     0     1     0     0     0     0     0
 cell8         ?     0     0     0     3     0     3     1
 cell9         0     1     0     0     0     0     0     0
-
+```
 
 
 The optional inputs are as follows:
@@ -44,15 +44,10 @@ The optional inputs are as follows:
 
 --fn_coeff false negative probability coefficient used for postprocessing.
  Default: 0.1 
- 
-
-
-
-
-
-
 
 This draw_tree function can be used to visualize the Reconstructed matrix.
+
+
 # Draw_tree 
 
 This is the clonal tree that has been created:
@@ -61,6 +56,7 @@ This is the clonal tree that has been created:
 </p>
 
 For each node, the number inside the brackets denotes its node id and the number inside the parentheses shows the total number of mutations occurring on the path from the germline (root) to the node (i.e., the total number of mutations harbored by the node). The edge labels represent the number of mutations occurring between a parent and its child node. The complete list of mutations occurring at each edge can be found `data1.mutsAtEdges` file which contains:
+
 
 ```
 [12]->[11]: mut7 mut8 mut9 mut10 mut11
