@@ -1,89 +1,59 @@
 # HUNTRESS
 
 HUNTRESS is a fast heuristic for reconstructing phylogenetic trees of tumor evolution.
+Call this function like:
 
+python huntress.py "Input_matrix_filename" "Output_filename" --nofcpus 8 --algorithmchoice "FPNA" --fn_fpratio 100 --fp_coeff 0.0001 --fn_coeff 0.1
 
-## Contents
-  1. [Installation](#installation)
-  2. [Running](#running)
-     * [Input](#input)
-     * [Output](#output)
-     * [Parameters](#parameters)
-  3. [Example](#example)
-  4. [Contact](#contact)
+Input Matrix: The path and name of the the noisy matrix is given here. 
+Output Matrix: The reconstructed error free matrix is written in Output_filename with the extension ".CFMatrix"
 
-<a name="installation"></a>
-## Installation
-HUNTRESS is written in Python. It supports Python 3. Currently it is intended to be run on POSIX-based systems (only Linux and macOS have been tested).  
+The format of the input matrix is as follows.
 
-```console
-~$ git clone git@github.com:PASSIONLab/HUNTRESS.git
-~$ cd HUNTRESS
-~$ pip install -r requirements.txt
-~$ python huntress.py --help
-```
-
-<a name="running"></a>
-## Running
-
-<a name="input"></a>
-### Input
-
-Single-cell input is assumed to be represented in the form of ternary, __tab-delimited__, matrix with rows corresponding to single-cells and columns corresponding to mutations. We assume that this file contains headers and that matrix is ternary matrix with 0 denoting the absence and 1 denoting the presence of mutation in a given cell, whereas ? represents the lack of information about presence/absence of mutation in a given cell (i.e. missing entry). __In order to simplify parsing of the matrix, we also assume that upper left corner equals to string `cellID/mutID`__.
+Single-cell input is assumed to be represented in the form of ternary, __tab-delimited__, matrix with rows corresponding to single-cells and columns corresponding to mutations. We assume that this file contains headers and that matrix is ternary matrix with 0 denoting the absence and 1 denoting the presence of mutation in a given cell, whereas 3 represents the lack of information about presence/absence of mutation in a given cell (i.e. missing entry). __In order to simplify parsing of the matrix, we also assume that upper left corner equals to string `cellID/mutID`__.
 
 Below is an example of single-cell data matrix. Note that mutation and cell names are arbitrary strings not containing tabs or spaces, however they must be unique.
 ```
 cellID/mutID  mut0  mut1  mut2  mut3  mut4  mut5  mut6  mut7
-cell0         0     0     ?     0     0     0     0     0
-cell1         0     ?     1     0     0     0     1     1
+cell0         0     0     3     0     0     0     0     0
+cell1         0     3     1     0     0     0     1     1
 cell2         0     0     1     0     0     0     1     1
 cell3         1     1     0     0     0     0     0     0
 cell4         0     0     1     0     0     0     0     0
 cell5         1     0     0     0     0     0     0     0
 cell6         0     0     1     0     0     0     1     1
 cell7         0     0     1     0     0     0     0     0
-cell8         ?     0     0     0     ?     0     ?     1
+cell8         ?     0     0     0     3     0     3     1
 cell9         0     1     0     0     0     0     0     0
-```
 
-<a name="output"></a>
-### Output
-The program will generate a file in **OUT_DIR** folder (which is set by argument -o or --outDir). This folder will be created automatically if it does not exist.
 
-The output matrix is also a tab-delimited file having the same format as the input matrix, except that eliminated mutations (columns) are excluded (so, in case when mutation elimination is allowed, this matrix typically contains less columns than the input matrix). Output matrix represents genotypes-corrected matrix (where false positives and false negatives from the input are corrected and each of the missing entries set to 0 or 1). Suppose the input file is **INPUT_MATRIX.ext**, the output matrix will be stored in file **OUT_DIR/INPUT_MATRIX.CFMatrix**. For example:
-```
- input file: data/ALL2.SC
-output file: OUT_DIR/ALL2.CFMatrix
-```
 
-<a name="parameters"></a>
-### Parameters
-| Parameter  | Description                              | Default  | Mandatory      |
-|------------|------------------------------------------|----------|----------------|
-| -i         | Path to single-cell data matrix file     | -        | :radio_button: |
-| -o         | Output directory                         | current  | :white_circle: |
-| -b         | Bounding algorithm                       | 1        | :white_circle: |
-| -t         | Draw output tree with Graphviz           | -        | :white_circle: |
+The optional inputs are as follows:
 
-<a name="example"></a>
-## Example
+--nofcpus defines the number of cpus to be used for tuning in parallel. Default is 7
 
-```console
-~$ python main.py -i example/data1.SC -o example -b 2 -t
+--algorithmchoice defines the version of the algorithm to be used.
+           = "FN" for matrices that only have false negatives
+           = "FPNA" for matrices that have false positives , false negatives and NA (entries that could not be read) entries. These entries must be given as 3 in the input matrix
 
-[02/04 12:53:49] Size: (20, 20)
-[02/04 12:53:49] NAValue: 3
-[02/04 12:53:49] #Zeros: 226
-[02/04 12:53:49] #Ones: 94
-[02/04 12:53:49] #NAs: 80
-[02/04 12:53:49] Time: 00:00:00
-[02/04 12:53:49] #0->1: 10
-[02/04 12:53:49] #1->0: 0
-[02/04 12:53:49] #na->0: 60
-[02/04 12:53:49] #na->1: 20
-[02/04 12:53:49] isDone: True
-[02/04 12:53:49] The output phylogenetic tree is in 'example' directory!
-```
+--fn_fpratio is the ratio of the weights of 0->1 switches over 1->0 switches that is used by the algorithm to tune the parameters.
+ Default=100            
+
+--fp_coeff false positive probability coefficient used for postprocessing.
+ Default: 0.0001
+
+--fn_coeff false negative probability coefficient used for postprocessing.
+ Default: 0.1 
+ 
+
+
+
+
+
+
+
+This draw_tree function can be used to visualize the Reconstructed matrix.
+# Draw_tree 
 
 This is the clonal tree that has been created:
 <p align="center">
@@ -108,6 +78,4 @@ For each node, the number inside the brackets denotes its node id and the number
 
 ```
 
-<a name="contact"></a>
-## Contact
-If you have any questions please e-mail us at CanKizilkale@lbl.gov or frashidi@iu.edu.
+
