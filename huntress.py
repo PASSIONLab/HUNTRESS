@@ -222,15 +222,6 @@ def findclosestinter(i,M_input):
                 vec_int=vec_int*M_input[j,:]
     return vec_int
 
-            
-    
-            
-        
-        
-        
-                            
-
-
 # Both algorithms take inut matrices of BOOL type.
 def greedyPtreeNew(M_input): #very greedy algorithm that constructs a ptree matrix from M_inputs by adding 1's
     # M_input has to be of type BOOLEAN !
@@ -696,7 +687,7 @@ parser.add_argument("inputfile")
 parser.add_argument("outputfile")
 parser.add_argument("--nofcpus", default=7,type=int,nargs="?")
 parser.add_argument("--algorithmchoice",default="FPNA",nargs="?")
-parser.add_argument("--fn_fpratio", default=100,type=int,nargs="?")
+parser.add_argument("--fn_fpratio", default=51,type=int,nargs="?")
 parser.add_argument("--fp_coeff", default=0.00001 ,type=float,nargs="?")
 parser.add_argument("--fn_coeff",default=0.1,type=float,nargs="?")
 args= parser.parse_args()
@@ -704,5 +695,9 @@ args= parser.parse_args()
 print(args.inputfile)
 
 if __name__ == '__main__':
-
-    Reconstruct(args.inputfile,args.outputfile,Algchoice=args.algorithmchoice,n_proc=args.nofcpus,fnfp=args.fn_fpratio,post_fn=args.fn_coeff,post_fp=args.fp_coeff)
+    fn_conorm=0.1
+    fp_conorm=fn_conorm*args.fp_coeff/args.fn_coeff
+#    fnfp_conorm=fn_conorm/fp_conorm
+#    Reconstruct(args.inputfile,args.outputfile,Algchoice=args.algorithmchoice,n_proc=args.nofcpus,fnfp=args.fn_fpratio,post_fn=args.fn_coeff,post_fp=args.fp_coeff)
+    Reconstruct(args.inputfile,args.outputfile,Algchoice=args.algorithmchoice,n_proc=args.nofcpus,fnfp=args.fn_fpratio,post_fn=fn_conorm,post_fp=fp_conorm)
+    
