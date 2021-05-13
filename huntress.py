@@ -685,7 +685,7 @@ def c_m_row(M_input,M_nodes,pc_fp=0.0001,pc_fn=0.1):
 parser = argparse.ArgumentParser()
 parser.add_argument("inputfile")
 parser.add_argument("outputfile")
-parser.add_argument("--nofcpus", default=7,type=int,nargs="?")
+parser.add_argument("--nofcpus", default=mp.cpu_count(),type=int,nargs="?")
 parser.add_argument("--algorithmchoice",default="FPNA",nargs="?")
 parser.add_argument("--fn_fpratio", default=51,type=int,nargs="?")
 parser.add_argument("--fp_coeff", default=0.00001 ,type=float,nargs="?")
