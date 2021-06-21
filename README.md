@@ -1,6 +1,9 @@
 # HUNTRESS
 
 HUNTRESS is a fast heuristic for reconstructing phylogenetic trees of tumor evolution.
+
+The code requires Anaconda installed. 
+
 Call this function like:
 
 python huntress.py "Input_matrix_filename" "Output_filename" --nofcpus 8 --algorithmchoice "FPNA" --fn_fpratio 100 --fp_coeff 0.0001 --fn_coeff 0.1
