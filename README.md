@@ -2,14 +2,26 @@
 
 HUNTRESS is a fast heuristic for reconstructing phylogenetic trees of tumor evolution.
 
-The code requires Anaconda installed. 
+The code requires Anaconda installed. For instructions on installation please visit https://docs.anaconda.com/anaconda/install/index.html .
 
-Call this function like:
+To Call the function with default arguments please use: 
+
+python huntress.py "Input_matrix_filename" "Output_filename"
+
+Call this function with full argumentsas like:
 
 python huntress.py "Input_matrix_filename" "Output_filename" --nofcpus 8 --algorithmchoice "FPNA" --fn_fpratio 100 --fp_coeff 0.0001 --fn_coeff 0.1
 
+
 Input Matrix: The path and name of the the noisy matrix is given here. 
 Output Matrix: The reconstructed error free matrix is written in Output_filename with the extension ".CFMatrix"
+
+Example: (Given that huntress.py is in the same folder as Demo.Sc) 
+
+python huntress.py "Demo.SC" "Demo_out"
+
+The reconstructed matrix will be written in Demo_out.CFMatrix
+
 
 The format of the input matrix is as follows.
 
