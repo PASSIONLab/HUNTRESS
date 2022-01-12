@@ -60,8 +60,9 @@ The optional inputs are as follows:
 --fn_coeff false negative probability coefficient used for postprocessing.
  Default: 0.1 
 
-This draw_tree function can be used to visualize the Reconstructed matrix.
 
+
+The following can be used to visualize the Reconstructed matrix.
 
 # Drawing tree
 
