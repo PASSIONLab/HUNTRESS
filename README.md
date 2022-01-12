@@ -52,7 +52,7 @@ The optional inputs are as follows:
            = "FPNA" for matrices that have false positives , false negatives and NA (entries that could not be read) entries. These entries must be given as 3 in the input matrix
 
 --fn_fpratio is the ratio of the weights of 0->1 switches over 1->0 switches that is used by the algorithm to tune the parameters.
- Default=100            
+ Default=51            
 
 --fp_coeff false positive probability coefficient used for postprocessing.
  Default: 0.0001
