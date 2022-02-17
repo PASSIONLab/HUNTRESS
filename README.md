@@ -2,7 +2,7 @@
 
 HUNTRESS is a fast algorithm created by Can Kizilkale for reconstructing phylogenetic trees of tumor evolution.
 
-The code requires Anaconda installed. For instructions on installation please visit https://docs.anaconda.com/anaconda/install/index.html .
+The code runs best in Anaconda environment using python version 3.6 or newer. Anaconda can easily be installed by following the instructions on  https://docs.anaconda.com/anaconda/install/index.html.
 
 To Call the function with default arguments please use: 
 
