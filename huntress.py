@@ -31,7 +31,7 @@ import itertools
 from multiprocessing import Process, Queue
 import multiprocessing as mp
 
-os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
+# os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'   Unused line commented out.  
 np.set_printoptions(threshold=np.inf)
 
 # ---------------------READ ME ---------------------------
