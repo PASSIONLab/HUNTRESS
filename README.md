@@ -4,13 +4,20 @@ HUNTRESS is a fast algorithm created by Can Kizilkale for reconstructing phyloge
 
 The code runs best in Anaconda environment using python version 3.6 or newer. Anaconda can easily be installed by following the instructions on  https://docs.anaconda.com/anaconda/install/index.html.
 
-To Call the function with default arguments please use: 
+Running this code is just as easy: 
+1. Install Anaconda. 
+2. Open Anaconda Prompt/Powershell, navigate to the folder containing huntress.py and call the py code as follows.
 
-python huntress.py "Input_matrix_filename" "Output_filename"
+    To Call the function with default arguments please use: 
 
-Call this function with full argumentsas like:
+    python huntress.py "Input_matrix_filename" "Output_filename"
 
-python huntress.py "Input_matrix_filename" "Output_filename" --nofcpus 8 --algorithmchoice "FPNA" --fn_fpratio 51 --fp_coeff 0.0001 --fn_coeff 0.1
+    Call this function with full argumentsas like:
+
+    python huntress.py "Input_matrix_filename" "Output_filename" --nofcpus 8 --algorithmchoice "FPNA" --fn_fpratio 51 --fp_coeff 0.0001 --fn_coeff 0.1
+
+If you like to use Jupyter Notebook/Lab etc, open a new terminal and call the function from the terminal. 
+
 
 
 Input Matrix: The path and name of the the noisy matrix is given here. 
