@@ -4,50 +4,44 @@ HUNTRESS is a fast algorithm created for reconstructing phylogenetic trees of tu
 
 Huntress is written is python. 
 
-# Package Dependencies
+## Package Dependencies
 Tested on:
 
-python   (ver 3.6)
-Multiproecssing
-os
-time
-argparse
-itertools
+- Python   (ver 3.6) 
+- Numpy    (version 1.20.3)
+- Pandas   (version 1.3.4)
 
-Numpy    (version 1.20.3)
-Pandas   (version 1.3.4)
+> We encourage using Anaconda for package management(not necessary). 
 
+## Installation
+No installation is required. Download "huntress.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/huntress.py).
 
+Open Terminal/powershell and type:
 
+`python huntress.py "Input_filename" "Output_filename" `
 
-The code runs best in Anaconda environment using python version 3.6 or newer. Anaconda can easily be installed by following the instructions on  https://docs.anaconda.com/anaconda/install/index.html.
-
-Running this code is just as easy: 
-1. Install Anaconda. 
-2. Open Anaconda Prompt/Powershell, navigate to the folder containing huntress.py and call the py code as follows.
-
-    To Call the function with default arguments please use: 
-
-    python huntress.py "Input_matrix_filename" "Output_filename"
-
-    Call this function with full argumentsas like:
-
-    python huntress.py "Input_matrix_filename" "Output_filename" --nofcpus 8 --algorithmchoice "FPNA" --fn_fpratio 51 --fp_coeff 0.0001 --fn_coeff 0.1
-
-If you like to use Jupyter Notebook/Lab etc, open a new terminal and call the function from the terminal. 
+- 'Input_filename' the path to the file that contains the noisy matrix.
+- 'Output_filename' the path to the output file. Reconstructed matrix is written in "Output_filename.CFMATRIX". 
 
 
+### List of tuneable parameters and their default values
 
-Input Matrix: The path and name of the the noisy matrix is given here. 
-Output Matrix: The reconstructed error free matrix is written in Output_filename with the extension ".CFMatrix"
+- '--nofcpus' defines the number of cpus to be used for tuning in parallel. Default is 7
 
-Example: (Given that huntress.py is in the same folder as Demo.Sc) 
+- '--algorithmchoice' defines the version of the algorithm to be used.
+           = "FN" for matrices that only have false negatives
+           = "FPNA" for matrices that have false positives , false negatives and NA (entries that could not be read) entries. These entries must be given as 3 in the input matrix
 
-python huntress.py "Demo.SC" "Demo_out"
+- '--fn_fpratio' is the ratio of the weights of 0->1 switches over 1->0 switches that is used by the algorithm to tune the parameters.
+ Default=51            
 
-The reconstructed matrix will be written in Demo_out.CFMatrix
+- '--fp_coeff' false positive probability coefficient (used for postprocessing).
+ Default: 0.0001
 
+- '--fn_coeff' false negative probability coefficient (used for postprocessing).
+ Default: 0.1   
 
+## Input Output Format:
 The format of the input matrix is as follows.
 
 Single-cell input is assumed to be represented in the form of ternary, __tab-delimited__, matrix with rows corresponding to single-cells and columns corresponding to mutations. We assume that this file contains headers and that matrix is ternary matrix with 0 denoting the absence and 1 denoting the presence of mutation in a given cell, whereas 3 represents the lack of information about presence/absence of mutation in a given cell (i.e. missing entry). __In order to simplify parsing of the matrix, we also assume that upper left corner equals to string `cellID/mutID`__.
@@ -59,7 +53,7 @@ cell0         0     0     3     0     0     0     0     0
 cell1         0     3     1     0     0     0     1     1
 cell2         0     0     1     0     0     0     1     1
 cell3         1     1     0     0     0     0     0     0
-cell4         0     0     1     0     0     0     0     0
+cell4         0     0     1     0     3     0     0     0
 cell5         1     0     0     0     0     0     0     0
 cell6         0     0     1     0     0     0     1     1
 cell7         0     0     1     0     0     0     0     0
@@ -67,27 +61,22 @@ cell8         3     0     0     0     3     0     3     1
 cell9         0     1     0     0     0     0     0     0
 ```
 
+The output is of the same format. Since it represents the reconstructed matrix its elements are only 1's and 0's. 
 
-The optional inputs are as follows:
+### EXAMPLE and Testing 
 
---nofcpus defines the number of cpus to be used for tuning in parallel. Default is 7
+Download Demo.Sc from https://github.com/PASSIONLab/HUNTRESS/blob/master/Demo.SC 
 
---algorithmchoice defines the version of the algorithm to be used.
-           = "FN" for matrices that only have false negatives
-           = "FPNA" for matrices that have false positives , false negatives and NA (entries that could not be read) entries. These entries must be given as 3 in the input matrix
+`python huntress.py "Demo.SC" "Demo_reconstructed" `
 
---fn_fpratio is the ratio of the weights of 0->1 switches over 1->0 switches that is used by the algorithm to tune the parameters.
- Default=51            
+The reconstructed matrix will be written in "Demo_reconstructed.CFMatrix"
 
---fp_coeff false positive probability coefficient used for postprocessing.
- Default: 0.0001
+For testing purposes check if the matrices in files "Demo_out.CFMatrix" and "Demo_reconstructed.CFMatrix" are identical.
 
---fn_coeff false negative probability coefficient used for postprocessing.
- Default: 0.1 
+### Additional functions and outputs
+The code includes additional testing functions CompareAD(Ground Truth Matrix,Reconstructed Matrix) computes ancestor descendent score of the reconstructed matrix,CompareDF(Ground Truth Matrix,Reconstructed Matrix) which computes ancestor descendent score of the reconstructed matrix. The code also generates a log file as "Output_filename.LOG". 
 
 
-
-The following can be used to visualize the Reconstructed matrix.
 
 # Drawing tree
 
