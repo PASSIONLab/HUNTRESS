@@ -2,6 +2,22 @@
 
 HUNTRESS is a fast algorithm created for reconstructing phylogenetic trees of tumor evolution.
 
+Huntress is written is python. 
+
+# Package Dependencies
+Tested on:
+
+python   (ver 3.6)
+Multiproecssing
+os
+time
+argparse
+itertools
+
+Numpy    (version 1.20.3)
+Pandas   (version 1.3.4)
+
+
 
 
 The code runs best in Anaconda environment using python version 3.6 or newer. Anaconda can easily be installed by following the instructions on  https://docs.anaconda.com/anaconda/install/index.html.
