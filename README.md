@@ -1,6 +1,6 @@
 # HUNTRESS
 
-HUNTRESS is a fast algorithm created for reconstructing phylogenetic trees of tumor evolution.
+HUNTRESS is a fast algorithm for reconstructing phylogenetic trees of tumor evolution.
 
 Huntress is written is python. 
 
@@ -14,11 +14,11 @@ Tested on:
 > We encourage using Anaconda for package management(not necessary). 
 
 ## Installation
-No installation is required. Download "huntress.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/huntress.py).
+No installation is required. Download "HUNTRESS.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/HUNTRESS.py).
 
 Open Terminal/powershell and type:
 
-`python huntress.py "Input_filename" "Output_filename" `
+`python HUNTRESS.py --i "Input_filename" --o "Output_filename" `
 
 - 'Input_filename' the path to the file that contains the noisy matrix.
 - 'Output_filename' the path to the output file. Reconstructed matrix is written in "Output_filename.CFMATRIX". 
@@ -26,7 +26,10 @@ Open Terminal/powershell and type:
 
 ### List of tuneable parameters and their default values
 
-- '--nofcpus' defines the number of cpus to be used for tuning in parallel. Default is 7
+- '--i' Path to the input file
+- '--o' Path to the output file 
+
+- '--c' defines the number of cpus to be used for tuning in parallel. Default is 7
 
 - '--algorithmchoice' defines the version of the algorithm to be used.
            = "FN" for matrices that only have false negatives
@@ -67,7 +70,7 @@ The output is of the same format. Since it represents the reconstructed matrix i
 
 Download Demo.Sc from https://github.com/PASSIONLab/HUNTRESS/blob/master/Demo.SC 
 
-`python huntress.py "Demo.SC" "Demo_reconstructed" `
+`python HUNTRESS.py --i "Demo.SC" --o "Demo_reconstructed" `
 
 The reconstructed matrix will be written in "Demo_reconstructed.CFMatrix"
 
@@ -78,6 +81,3 @@ The code includes additional testing functions CompareAD(Ground Truth Matrix,Rec
 
 
 
-# Drawing tree
-
-For drawing the tree please visit [https://github.com/algo-cancer/PhISCS-BnB](https://github.com/algo-cancer/PhISCS-BnB)
