@@ -34,13 +34,13 @@ import multiprocessing as mp
 # ---------------------READ ME ---------------------------
 # Call this function like:
 #
-# \python huntress.py "Noisy_matrix_filename" "Output_filename" --nofcpus 8 --algorithmchoice "FPNA" --fn_fpratio 100 --fp_coeff 0.0001 --fn_coeff 0.1
+# \python huntress.py --i "Noisy_matrix_filename" --o "Output_filename" --t 8 --algorithmchoice "FPNA" --fn_fpratio 100 --fp_coeff 0.0001 --fn_coeff 0.1
 # Output is written on Output_filename.CFMATRIX
 #
 # The path and name of the the noisy matrix is given in Noisy_matrix_filename
 # The reconstructed error free matrix is written in Output_filename with the extension ".CFMatrix"
 # The optional inputs are as follows:
-# --nofcpus defines the number of cpus to be used for tuning in parallel. Default is 7
+# --t defines the number of threads to be used for tuning in parallel. Default is number of threads in the computer it is running on.
 # --algorithmchoice defines the version of the algorithm to be used.
 #           = "FN" for matrices that only have false negatives
 #           = "FPNA" for matrices that have false positives , false negatives and NA (entries that could not be read) entries. These entries must be given as 3 in the input matrix
@@ -623,7 +623,7 @@ def c_m_row(M_input,M_nodes,pc_fp=0.0001,pc_fn=0.1):             # row wise maxi
 parser = argparse.ArgumentParser()
 parser.add_argument("--i",default=" ",type=str, nargs="?")
 parser.add_argument("--o",default=" ",type=str, nargs="?")
-parser.add_argument("--c", default=mp.cpu_count(),type=int,nargs="?")
+parser.add_argument("--t", default=mp.cpu_count(),type=int,nargs="?")
 parser.add_argument("--algorithmchoice",default="FPNA",nargs="?")
 parser.add_argument("--fn_fpratio", default=51,type=int,nargs="?")
 parser.add_argument("--fp_coeff", default=0.00001 ,type=float,nargs="?")
@@ -636,5 +636,5 @@ if __name__ == '__main__':
     fn_conorm=0.1
     fp_conorm=fn_conorm*args.fp_coeff/args.fn_coeff
 
-    Reconstruct(args.i,args.o,Algchoice=args.algorithmchoice,n_proc=args.c,fnfp=args.fn_fpratio,post_fn=fn_conorm,post_fp=fp_conorm)
+    Reconstruct(args.i,args.o,Algchoice=args.algorithmchoice,n_proc=args.t,fnfp=args.fn_fpratio,post_fn=fn_conorm,post_fp=fp_conorm)
     
