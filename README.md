@@ -29,7 +29,7 @@ Open Terminal/powershell and type:
 - '--i' Path to the input file
 - '--o' Path to the output file 
 
-- '--c' defines the number of cpus to be used for tuning in parallel. Default is 7
+- '--t' defines the number of threads to be used for tuning in parallel. Default is number of threads of the computers it is run. 
 
 - '--algorithmchoice' defines the version of the algorithm to be used.
            = "FN" for matrices that only have false negatives
