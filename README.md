@@ -16,7 +16,7 @@ Tested on:
 ## Installation
 No installation is required. Download "HUNTRESS.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/HUNTRESS.py).
 
-Open Terminal/powershell and type:
+Open Terminal/powershell in the folder containing "HUNTRESS.py" and type:
 
 `python HUNTRESS.py --i "Input_filename" --o "Output_filename" `
 
