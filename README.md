@@ -25,7 +25,7 @@ Tested on:
 > We encourage using Anaconda for package management(not necessary). 
 
 ## Quick Start <a name="QS"></a>
-If python and dependencies are already installed HUNTRESS can quickly be used as follows. 
+If python and dependencies are already installed HUNTRESS can quickly be used as follows(otherwise please follow the installation). 
 
 Download "HUNTRESS.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/HUNTRESS.py).
 
