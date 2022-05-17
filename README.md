@@ -43,19 +43,19 @@ Installation is very easy. Just follow these steps.
 
 Make sure that python version>=3.6 is installed.
 
-Download the repository. From the terminal type the following
+- Clone the repository. From the terminal type the following
 
 `$ git clone https://github.com/PASSIONLab/HUNTRESS  `
 
-Go to the repo directory.
+- Go to the repo directory.
 
 `$ cd HUNTRESS`
 
-Inside the repo type the following to install dependencies. 
+- Inside the repo type the following to install dependencies. 
 
 `$ pip install -r requirements.txt`
 
-Finally test the script:
+- Finally test the script:
 
 `$ python Test.py`
 
