@@ -42,7 +42,7 @@ Go to the repo directory.
 
 Inside the repo type the following to install dependencies. 
 
-`$ pip install -r .\requirements.txt`
+`$ pip install -r requirements.txt`
 
 Finally test the script:
 
