@@ -13,8 +13,10 @@ Tested on:
 
 > We encourage using Anaconda for package management(not necessary). 
 
-## Installation
-No installation is required. Download "HUNTRESS.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/HUNTRESS.py).
+## Quick Start
+If python and dependencies are already installed HUNTRESS can quickly be used as follows. 
+
+Download "HUNTRESS.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/HUNTRESS.py).
 
 Open Terminal/powershell in the folder containing "HUNTRESS.py" and type:
 
@@ -24,9 +26,46 @@ Open Terminal/powershell in the folder containing "HUNTRESS.py" and type:
 - 'Output_filename' the path to the output file. Reconstructed matrix is written in "Output_filename.CFMATRIX". 
 
 
-### List of tuneable parameters and their default values
+## Installation
+
+Installation is very easy. Just follow these steps.   
+
+Make sure that python version>=3.6 is installed.
+
+Download the repository. From the terminal type the following
+
+`$ git clone https://github.com/PASSIONLab/HUNTRESS  `
+
+Go to the repo directory.
+
+`$ cd HUNTRESS`
+
+Inside the repo type the following to install dependencies. 
+
+`$ pip install -r .\requirements.txt`
+
+Finally test the script:
+
+`$ python Test.py`
+
+At the end of the run you should see "Test PASSED ...". And you are good to go.
+
+
+## Usage
+
+Open a terminal/powershell and go to the directory containing "HUNTRESS.py" and type.
+
+`python HUNTRESS.py --i "Input_filename" --o "Output_filename `
+
+- 'Input_filename' the path to the file that contains the noisy matrix.
+- 'Output_filename' the path to the output file. Reconstructed matrix is written in "Output_filename.CFMATRIX". 
+
+> If using Anaconda use Anaconda's own powershell/terminal.  
+
+### List of arguments/tuneable parameters and their default values
 
 - '--i' Path to the input file
+
 - '--o' Path to the output file 
 
 - '--t' defines the number of threads to be used for tuning in parallel. Default is number of threads of the computers it is run. 
@@ -68,6 +107,12 @@ The output is of the same format. Since it represents the reconstructed matrix i
 
 ### EXAMPLE and Testing 
 
+As stated in installation a quick test can be performed by running the following while inside the folder containing repo files. 
+`python Test.py`
+If you see "Test PASSED ..." at the end of the execution it is done.
+
+For manual testing do the following.
+
 Download Demo.Sc from https://github.com/PASSIONLab/HUNTRESS/blob/master/Demo.SC 
 
 `python HUNTRESS.py --i "Demo.SC" --o "Demo_reconstructed" `
@@ -75,6 +120,7 @@ Download Demo.Sc from https://github.com/PASSIONLab/HUNTRESS/blob/master/Demo.SC
 The reconstructed matrix will be written in "Demo_reconstructed.CFMatrix"
 
 For testing purposes check if the matrices in files "Demo_out.CFMatrix" and "Demo_reconstructed.CFMatrix" are identical.
+
 
 ### Additional functions and outputs
 The code includes additional testing functions CompareAD(Ground Truth Matrix,Reconstructed Matrix) computes ancestor descendent score of the reconstructed matrix,CompareDF(Ground Truth Matrix,Reconstructed Matrix) which computes ancestor descendent score of the reconstructed matrix. The code also generates a log file as "Output_filename.LOG". 
