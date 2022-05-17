@@ -4,7 +4,18 @@ HUNTRESS is a fast algorithm for reconstructing phylogenetic trees of tumor evol
 
 Huntress is written is python. 
 
-## Package Dependencies
+# Table of Contents
+1. [Package Dependencies](#PackD)
+2. [Quick Start](#QS)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [List of arguments/tuneable parameters and their default values](#list)
+6. [Input Output Format](#IOFormat)
+7. [EXAMPLE and Testing](#ET)
+8. [Additional functions and outputs](#additional)
+
+
+## Package Dependencies <a name="PackD"></a>
 Tested on:
 
 - Python   (ver 3.6) 
@@ -13,7 +24,7 @@ Tested on:
 
 > We encourage using Anaconda for package management(not necessary). 
 
-## Quick Start
+## Quick Start <a name="QS"></a>
 If python and dependencies are already installed HUNTRESS can quickly be used as follows. 
 
 Download "HUNTRESS.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/HUNTRESS.py).
@@ -26,7 +37,7 @@ Open Terminal/powershell in the folder containing "HUNTRESS.py" and type:
 - 'Output_filename' the path to the output file. Reconstructed matrix is written in "Output_filename.CFMATRIX". 
 
 
-## Installation
+## Installation <a name="installation"></a>
 
 Installation is very easy. Just follow these steps.   
 
@@ -51,7 +62,7 @@ Finally test the script:
 At the end of the run you should see "Test PASSED ...". And you are good to go.
 
 
-## Usage
+## Usage <a name="usage"></a>
 
 Open a terminal/powershell and go to the directory containing "HUNTRESS.py" and type.
 
@@ -62,7 +73,7 @@ Open a terminal/powershell and go to the directory containing "HUNTRESS.py" and 
 
 > If using Anaconda use Anaconda's own powershell/terminal.  
 
-### List of arguments/tuneable parameters and their default values
+### List of arguments/tuneable parameters and their default values <a name="list"></a>
 
 - '--i' Path to the input file
 
@@ -83,7 +94,7 @@ Open a terminal/powershell and go to the directory containing "HUNTRESS.py" and 
 - '--fn_coeff' false negative probability coefficient (used for postprocessing).
  Default: 0.1   
 
-## Input Output Format:
+## Input Output Format: <a name="IOFormat"></a>
 The format of the input matrix is as follows.
 
 Single-cell input is assumed to be represented in the form of ternary, __tab-delimited__, matrix with rows corresponding to single-cells and columns corresponding to mutations. We assume that this file contains headers and that matrix is ternary matrix with 0 denoting the absence and 1 denoting the presence of mutation in a given cell, whereas 3 represents the lack of information about presence/absence of mutation in a given cell (i.e. missing entry). __In order to simplify parsing of the matrix, we also assume that upper left corner equals to string `cellID/mutID`__.
@@ -105,7 +116,7 @@ cell9         0     1     0     0     0     0     0     0
 
 The output is of the same format. Since it represents the reconstructed matrix its elements are only 1's and 0's. 
 
-### EXAMPLE and Testing 
+### EXAMPLE and Testing <a name="ET"></a>
 
 As stated in installation a quick test can be performed by running the following while inside the folder containing repo files. 
 `python Test.py`
@@ -122,7 +133,7 @@ The reconstructed matrix will be written in "Demo_reconstructed.CFMatrix"
 For testing purposes check if the matrices in files "Demo_out.CFMatrix" and "Demo_reconstructed.CFMatrix" are identical.
 
 
-### Additional functions and outputs
+### Additional functions and outputs <a name="additional"></a>
 The code includes additional testing functions CompareAD(Ground Truth Matrix,Reconstructed Matrix) computes ancestor descendent score of the reconstructed matrix,CompareDF(Ground Truth Matrix,Reconstructed Matrix) which computes ancestor descendent score of the reconstructed matrix. The code also generates a log file as "Output_filename.LOG". 
 
 
