@@ -27,7 +27,7 @@ Tested on:
 ## Quick Start <a name="QS"></a>
 If python and dependencies are already installed HUNTRESS can quickly be used as follows(otherwise please follow the installation). 
 
-Download "HUNTRESS.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/HUNTRESS.py).
+Download "HUNTRESS.py" from [here]( https://github.com/PASSIONLab/HUNTRESS/blob/master/HUNTRESS.py). (Rightclick on raw and select save file as).
 
 Open Terminal/powershell in the folder containing "HUNTRESS.py" and type:
 
