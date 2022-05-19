@@ -1,8 +1,8 @@
 # HUNTRESS
 
-HUNTRESS is a fast algorithm for reconstructing phylogenetic trees of tumor evolution.
+U.S. Department Of Energy, Lawrence Berkeley National Laboratory (LBNL) [https://www.osti.gov/biblio/1777405](https://doi.org/10.11578/dc.20210416.2).
 
-Huntress is written is python. 
+HUNTRESS is a fast algorithm for reconstructing phylogenetic trees of tumor evolution.  
 
 # Table of Contents
 1. [Package Dependencies](#PackD)
@@ -12,7 +12,8 @@ Huntress is written is python.
 5. [List of arguments/tuneable parameters and their default values](#list)
 6. [Input Output Format](#IOFormat)
 7. [EXAMPLE and Testing](#ET)
-8. [Additional functions and outputs](#additional)
+8. [Contact Information](#contact)
+9. [Additional functions and outputs](#additional)
 
 
 ## Package Dependencies <a name="PackD"></a>
@@ -132,13 +133,14 @@ The reconstructed matrix will be written in "Demo_reconstructed.CFMatrix"
 
 For testing purposes check if the matrices in files "Demo_out.CFMatrix" and "Demo_reconstructed.CFMatrix" are identical.
 
+## Contact Information<a name="contact"></a>
+
+For questions please contact [Can Kizilkale](mailto:cankizilkale@lbl.gov) , [Aydin Buluc](mailto:abuluc@lbl.gov).
+
+
 
 ### Additional functions and outputs <a name="additional"></a>
 The code includes additional testing functions CompareAD(Ground Truth Matrix,Reconstructed Matrix) computes ancestor descendent score of the reconstructed matrix,CompareDF(Ground Truth Matrix,Reconstructed Matrix) which computes ancestor descendent score of the reconstructed matrix. The code also generates a log file as "Output_filename.LOG". 
-
-
-
-
 
 
 #### External/misc 
