@@ -2,7 +2,7 @@
 
 HUNTRESS is a fast algorithm for reconstructing phylogenetic trees of tumor evolution. 
 
-U.S. Department Of Energy, Lawrence Berkeley National Laboratory (LBNL) [https://www.osti.gov/biblio/1777405](https://doi.org/10.11578/dc.20210416.2).
+Licenced by U.S. Department Of Energy, Lawrence Berkeley National Laboratory (LBNL) [https://www.osti.gov/biblio/1777405](https://doi.org/10.11578/dc.20210416.2).
 
  
 
