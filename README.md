@@ -141,6 +141,6 @@ The code includes additional testing functions CompareAD(Ground Truth Matrix,Rec
 
 
 
-#### External Links 
+#### External/misc 
 
-There are a various tools available for visualizing phylogenetic trees such as [scphylo](https://scphylo-tools.readthedocs.io/en/latest/auto_examples/index.html#visualization). For an extensive list of visualization tools see [Wikipedia List of phylogenetic tree viewing software](https://en.wikipedia.org/wiki/List_of_phylogenetic_tree_visualization_software). 
+There are a various tools available for visualizing phylogenetic trees such as [scphylo](https://scphylo-tools.readthedocs.io/en/latest/auto_examples/index.html#visualization). 
