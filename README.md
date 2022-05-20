@@ -133,6 +133,8 @@ Download Demo.Sc from https://github.com/PASSIONLab/HUNTRESS/blob/master/Demo.SC
 
 The reconstructed matrix will be written in "Demo_reconstructed.CFMatrix"
 
+On a decent computer this should take much less than a couple of minutes.
+
 For testing purposes check if the matrices in files "Demo_out.CFMatrix" and "Demo_reconstructed.CFMatrix" are identical.
 
 ## Contact Information<a name="contact"></a>
