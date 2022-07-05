@@ -139,7 +139,7 @@ For testing purposes check if the matrices in files "Demo_out.CFMatrix" and "Dem
 
 ## Contact Information<a name="contact"></a>
 
-For questions please contact [Can Kizilkale](mailto:cankizilkale@lbl.gov) , [Aydin Buluc](mailto:abuluc@lbl.gov).
+For questions please contact [Can Kizilkale](mailto:cankizilkale@lbl.gov) , [Aydin Buluc](mailto:abuluc@lbl.gov), [Cenk Sahinalp](cenksahinalp@gmail.com).
 
 
 
