@@ -1,0 +1,31 @@
+{
+    "description": "<p>Release for publication.</p>\n<p>HUNTRESS is a fast algorithm for reconstructing phylogenetic trees of tumor evolution.</p>\n<p>Licenced by U.S. Department Of Energy, Lawrence Berkeley National Laboratory (LBNL) <a href=\"https://doi.org/10.11578/dc.20210416.2\">https://www.osti.gov/biblio/1777405</a>.</p>", 
+    "license": "other-open", 
+    "title": "PASSIONLab/HUNTRESS: HUNTRESS", 
+    "version": "v0.1.1", 
+    "upload_type": "software", 
+    "publication_date": "2022-07-06", 
+    "creators": [
+        {
+            "affiliation": "Berkeley Lab and UC Berkeley",
+            "name": "Can Kizilkale"
+        }, 
+        {
+            "affiliation": "Berkeley Lab and UC Berkeley", 
+            "name": "Aydin Buluc"
+        }
+    ], 
+    "access_right": "open", 
+    "related_identifiers": [
+        {
+            "scheme": "url", 
+            "identifier": "https://github.com/PASSIONLab/HUNTRESS/tree/v0.1.1", 
+            "relation": "isSupplementTo"
+        }, 
+        {
+            "scheme": "doi", 
+            "identifier": "10.5281/zenodo.6803391", 
+            "relation": "isVersionOf"
+        }
+    ]
+}
